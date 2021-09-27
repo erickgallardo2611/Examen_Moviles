@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "816900541598",
+    "firebase_url": "https://smooth-mason-225413-default-rtdb.firebaseio.com",
+    "project_id": "smooth-mason-225413",
+    "storage_bucket": "smooth-mason-225413.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816900541598:android:2395573fe1d19e9072bf8f",
+        "android_client_info": {
+          "package_name": "com.example.examen_moviles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsF_DGrniCUz0MG5zGgaxX8Y6CJuCUza0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816900541598:android:9509d45811aa485572bf8f",
+        "android_client_info": {
+          "package_name": "com.example.examenmoviles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsF_DGrniCUz0MG5zGgaxX8Y6CJuCUza0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:816900541598:android:4f94efa5d417eed672bf8f",
+        "android_client_info": {
+          "package_name": "com.example.firebaseuno"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsF_DGrniCUz0MG5zGgaxX8Y6CJuCUza0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "816900541598-krrb50hm1dcjrntma8ja8dttfe10410p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
