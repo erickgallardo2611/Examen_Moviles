@@ -3,27 +3,23 @@ package com.example.moviles_computacion_2021_b
 import android.os.Parcel
 import android.os.Parcelable
 
-class BTorneo(
-    var id_torneo: Int?,
+data class BTorneo(
     var nombre: String?,
     var descripcion: String?,
-    var torneo: BTorneo? = null
-) : Parcelable{
+    val torneo: BTorneo? = null )
+    : Parcelable{
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readParcelable(BTorneo::class.java.classLoader)
+        parcel.readParcelable(BJugador::class.java.classLoader)
     ) {
     }
     override fun toString(): String {
         return "${nombre} - ${descripcion}"
     }
     override fun writeToParcel(parcel: Parcel?, flags: Int) {
-        parcel?.writeInt(id_torneo!!)
         parcel?.writeString(nombre)
         parcel?.writeString(descripcion)
-        parcel?.writeParcelable(torneo, flags)
     }
 
     override fun describeContents(): Int {

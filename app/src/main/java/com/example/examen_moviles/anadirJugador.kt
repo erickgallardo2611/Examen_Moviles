@@ -1,6 +1,5 @@
 package com.example.examen_moviles
 
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,10 +11,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.moviles_computacion_2021_b.BJugador
 import com.example.moviles_computacion_2021_b.BTorneo
-import com.example.moviles_computacion_2021_b.ESqliteHelperUsuario
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class anadirJugador : AppCompatActivity() {
-    val datos = ESqliteHelperUsuario(this)
+    //val datos = ESqliteHelperUsuario(this)
     var adaptador: ArrayAdapter<BJugador>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +25,9 @@ class anadirJugador : AppCompatActivity() {
         setContentView(R.layout.activity_anadir_jugador)
         val txtIdplayer = findViewById<TextView>(R.id.idjugador)
         val btnBuscar = findViewById<Button>(R.id.findJugador)
-        val jugadores = datos.mostrarMenosJugadorTorneo()
-        Log.i("Jugadores view","${jugadores}")
+        //val jugadores = datos.mostrarMenosJugadorTorneo()
+        //Log.i("Jugadores view","${jugadores}")
+        val jugadores: ArrayList<BJugador> = ArrayList<BJugador>()
         if(jugadores!=null) {
             adaptador = ArrayAdapter(
                 this,
@@ -38,10 +39,11 @@ class anadirJugador : AppCompatActivity() {
             lisviewVista.adapter = adaptador
         }
         btnBuscar.setOnClickListener{
-            val jugador=datos.consultarJugadorPorId(txtIdplayer.text.toString().toInt())
-            if(jugador.id_jugador!=0){
+            //val jugador=datos.consultarJugadorPorId(txtIdplayer.text.toString().toInt())
+            val jugador = consultarUno()
+            if(jugador.elo!=0){
                 if (torneo_selct != null) {
-                    datos.actualizarJugadorTorneoFormulario(torneo_selct.id_torneo!!,txtIdplayer.text.toString().toInt())
+                    //datos.actualizarJugadorTorneoFormulario(torneo_selct.id_torneo!!,txtIdplayer.text.toString().toInt())
                 }
                 abrirActividad(MainActivity::class.java)
                 Log.i("Jugador Encontrado","${jugador}")
@@ -63,5 +65,22 @@ class anadirJugador : AppCompatActivity() {
             clase
         )
         this.startActivity(intentExplicito);
+    }
+    fun consultarUno():BJugador{
+        val db = Firebase.firestore
+        var agregarJugador = BJugador("",1,"")
+        var jugadoresRef = db
+            .collection("proyectoAjedrez")
+        jugadoresRef
+            .whereEqualTo("nombre","erick")
+            .get()
+            .addOnSuccessListener {
+                for( jugadores in it){
+                    Log.i("jugador","${jugadores.data}")
+                    agregarJugador = BJugador(jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString()),jugadores.get("nacionalidad").toString())
+                }
+            }
+            .addOnFailureListener {  }
+        return agregarJugador
     }
 }

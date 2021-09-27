@@ -8,51 +8,57 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import com.example.moviles_computacion_2021_b.BJugador
 import com.example.moviles_computacion_2021_b.BTorneo
-import com.example.moviles_computacion_2021_b.ESqliteHelperUsuario
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class Jugadores : AppCompatActivity() {
+    var query: Query? = null
     var posiconElementoSeleccionado = 0
     val CODIGO_RESPUESTA_INTENT_EXPLICITO = 400
-    val datos = ESqliteHelperUsuario(this)
+    var listaJugador: ArrayList<BJugador> = ArrayList()
+    //val datos = ESqliteHelperUsuario(this)
     var adaptador: ArrayAdapter<BJugador>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_jugadores)
-        var jugadores=datos.mostrarTodoJugador()
-        val torneoSelect = intent.getParcelableExtra<BTorneo>("torneo")
+        //var jugadores=datos.mostrarTodoJugador()
+        //var jugadores =
 
+        val torneoSelect = intent.getParcelableExtra<BTorneo>("torneo")
+        consulta()
         var btn_crear = findViewById<Button>(R.id.btn_crear_jugador)
         btn_crear.setOnClickListener{
             abrirActividad(CrearJugador::class.java)
         }
+        Log.i("OncreateJugador","en actividad jugadores")
+        Log.i("los jugadores","${listaJugador}")
+        listaJugador
         if(torneoSelect!=null) {
             btn_crear.setVisibility(View.GONE)
-            jugadores = datos.mostrarTodoJugadorTorneo(torneoSelect.id_torneo!!)
-            Log.i("ID_del torneo","${torneoSelect} ${torneoSelect.id_torneo}")
+            //jugadores = datos.mostrarTodoJugadorTorneo(torneoSelect.id_torneo!!)
+
+            Log.i("ID_del torneo","${torneoSelect}")
             adaptador = ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                jugadores
+                listaJugador
             )
         }else{
             adaptador = ArrayAdapter(
                 this,
                 android.R.layout.simple_list_item_1,
-                jugadores
+                listaJugador
             )
         }
 
-        Log.i("Parametrs","onCreate ${jugadores}")
-        val vista=findViewById<ListView>(R.id.list_jugador)
+        Log.i("Parametrs","onCreate ${listaJugador}")
+        val vista=findViewById<ListView>(R.id.listTorneo)
         vista.adapter = adaptador
 
         registerForContextMenu(vista)
@@ -97,7 +103,7 @@ class Jugadores : AppCompatActivity() {
         posiconElementoSeleccionado = id
 
         Log.i("list-view","onCreate ${id}")
-        Log.i("list-view","Usuario ${datos.mostrarTodoJugador()}")
+        //Log.i("list-view","Usuario ${datos.mostrarTodoJugador()}")
 
     }
 
@@ -108,7 +114,8 @@ class Jugadores : AppCompatActivity() {
             R.id.miEditar -> {
                 if (jugadorSelected != null) {
                     Log.i("Parametrs","onCreate ${jugadorSelected.nombre} - ${jugadorSelected.elo}")
-                    val Anterior = datos.consultarJugadorPorId(jugadorSelected.id_jugador!!)
+                    //val Anterior = datos.consultarJugadorPorId(jugadorSelected.id_jugador!!)
+                    val Anterior : BJugador = BJugador(jugadorSelected.nombre,jugadorSelected.elo,jugadorSelected.nacionalidad)
                     abrirActividadEdit(CrearJugador::class.java,Anterior)
                 }else{
                     Log.i("Parametrs","nulos ")
@@ -125,12 +132,17 @@ class Jugadores : AppCompatActivity() {
                 builder.setNegativeButton("Cancelar", null)
                 builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener(){ Dialog, which ->
                     try {
-                        val dato = adaptador!!.getItem(posiconElementoSeleccionado)
-                        if (dato != null) {
-                            datos.eliminarJugadorFormulario(dato.id_jugador!!)
-                            adaptador?.remove(datos.consultarJugadorPorId(dato.id_torneo!!))
-                            abrirActividad(MainActivity::class.java)
+                        val db = Firebase.firestore
+                        if (jugadorSelected != null) {
+                            db.collection("proyectoAjedrez")
+                                .document(jugadorSelected.nombre.toString())
+                                .delete()
+                                .addOnSuccessListener {
+
+                                }
+                                .addOnFailureListener { }
                         }
+                        abrirActividad(MainActivity::class.java)
                     }finally{
                         Log.i("Erorr","no se puede eliminar")
                     }
@@ -143,5 +155,31 @@ class Jugadores : AppCompatActivity() {
 
             else -> super.onContextItemSelected(item)
         }
+    }
+    fun consulta():ArrayList<BJugador>{
+        Log.i("consulta","se realiza consulta")
+        val db = Firebase.firestore
+        val jugadoresConsultados = ArrayList<BJugador>()
+        var jugadoresRef = db
+            .collection("proyectoAjedrez")
+        jugadoresRef.get()
+            .addOnSuccessListener {
+                for( jugadores in it){
+                    Log.i("jugador","${jugadores.data}")
+                    listaJugador.add(BJugador(jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString()),jugadores.get("nacionalidad").toString()))
+                }
+                adaptador = ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    listaJugador
+                )
+                Log.i("Parametrs","onCreate ${listaJugador}")
+                val vista=findViewById<ListView>(R.id.listTorneo)
+                vista.adapter = adaptador
+
+            }
+            .addOnFailureListener {  }
+
+        return jugadoresConsultados
     }
 }

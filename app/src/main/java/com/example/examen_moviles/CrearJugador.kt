@@ -4,21 +4,40 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import com.example.moviles_computacion_2021_b.BJugador
-import com.example.moviles_computacion_2021_b.BTorneo
-import com.example.moviles_computacion_2021_b.ESqliteHelperUsuario
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class CrearJugador : AppCompatActivity() {
+    var query: Query? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crear_jugador)
-        val jugadorAnterior = intent.getParcelableExtra<BJugador>("jugador")
         val btn_crear_jugador = findViewById<Button>(R.id.creaJugador)
         val nombrejugador = findViewById<TextView>(R.id.editNombre)
         val elojugador = findViewById<TextView>(R.id.textElo)
-        val basedatos= ESqliteHelperUsuario(this)
+        val jugadorAnterior = intent.getParcelableExtra<BJugador>("jugador")
+        val spinner: Spinner = findViewById(R.id.spinnerNacionalidad)
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.country_arrays,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            spinner.adapter = adapter
+        }
+
+        //val basedatos= ESqliteHelperUsuario(this)
+        //val basedatos = Firebase.getInstance().getCurrentUser()
         nombrejugador.editableText
         if(jugadorAnterior!=null){
             Log.i("Pase","${jugadorAnterior.nombre}")
@@ -29,20 +48,15 @@ class CrearJugador : AppCompatActivity() {
             Log.i("Pase","no hay no existe :v")
         }
         btn_crear_jugador.setOnClickListener{
+
             if(nombrejugador.text.toString()=="Ingrese el nombre del jugador"||nombrejugador.text.toString()==""){
                 Log.i("bdd", "No esta lleno")
             }else{
                 Log.i("bdd", "Esta lleno")
                 if(jugadorAnterior!=null){
-                    val actualizado = basedatos.actualizarJugadorFormulario(nombrejugador.text.toString(),jugadorAnterior.id_jugador!!)
-                    Log.i("bdd", "Esta lleno ${actualizado} ${jugadorAnterior.nombre}")
+                    actualizarJugador(jugadorAnterior.nombre.toString())
                 }else{
-                    if (basedatos != null) {
-                        basedatos.crearJugadorFormulario(
-                            nombrejugador.text.toString()
-                        )
-                        Log.i("bdd", "Torneo creado")
-                    }
+                    crearJugador()
                 }
                 abrirActividad(MainActivity::class.java)
             }
@@ -56,5 +70,45 @@ class CrearJugador : AppCompatActivity() {
             clase
         )
         this.startActivity(intentExplicito);
+    }
+
+    fun crearJugador() {
+        val nombrejugador = findViewById<TextView>(R.id.editNombre)
+        val elojugador = findViewById<TextView>(R.id.textElo)
+        val spinner: Spinner = findViewById(R.id.spinnerNacionalidad)
+        val nuevoJugador = hashMapOf<String, Any>(
+            "nombre" to nombrejugador.text.toString(),
+            "nacionalidad" to spinner.selectedItem.toString(),
+            "elo" to elojugador.text.toString()
+        )
+        val db = Firebase.firestore
+        val referencia = db.collection("proyectoAjedrez")
+            .document(nombrejugador.text.toString())
+            .set(nuevoJugador)
+            .addOnSuccessListener {  }
+            .addOnFailureListener { }
+
+    }
+    fun actualizarJugador(jugadorAnterior: String) {
+        val nombrejugador = findViewById<TextView>(R.id.editNombre)
+        val elojugador = findViewById<TextView>(R.id.textElo)
+        val spinner: Spinner = findViewById(R.id.spinnerNacionalidad)
+        val actualizarJugador = hashMapOf<String, Any>(
+            "nombre" to nombrejugador.text.toString(),
+            "nacionalidad" to spinner.selectedItem.toString(),
+            "elo" to elojugador.text.toString()
+        )
+        val db = Firebase.firestore
+        if (jugadorAnterior != null) {
+            db.collection("proyectoAjedrez")
+                .document(jugadorAnterior)
+                .delete()
+                .addOnSuccessListener {
+                    Log.i("Actualizar Jugador", "se acutalizo jugador")
+                }
+                .addOnFailureListener { }
+        }
+        crearJugador()
+
     }
 }

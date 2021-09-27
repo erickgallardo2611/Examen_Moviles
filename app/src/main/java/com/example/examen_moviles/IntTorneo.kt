@@ -7,38 +7,29 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviles_computacion_2021_b.BTorneo
-import com.example.moviles_computacion_2021_b.ESqliteHelperUsuario
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class IntTorneo : AppCompatActivity() {
     var posiconElementoSeleccionado = 0
     val CODIGO_RESPUESTA_INTENT_EXPLICITO = 400
-    val datos=ESqliteHelperUsuario(this)
+    //val datos=ESqliteHelperUsuario(this)
+    var torneos: ArrayList<BTorneo> = ArrayList()
     var adaptador: ArrayAdapter<BTorneo>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_int_torneo)
-        val torneos=datos.mostrarTodoTorneo()
-        adaptador = ArrayAdapter(
-            this,
-            android.R.layout.simple_list_item_1,
-            torneos
-        )
-        val vista=findViewById<ListView>(R.id.list_jugador)
-        vista.adapter = adaptador
-
+        consulta()
         val btn_crear = findViewById<Button>(R.id.btn_crear_torneo)
         btn_crear.setOnClickListener{
             abrirActividad(CrearTorneo::class.java)
         }
-        registerForContextMenu(vista)
+
     }
 
 
@@ -80,7 +71,7 @@ class IntTorneo : AppCompatActivity() {
         posiconElementoSeleccionado = id
 
         Log.i("list-view","onCreate ${id}")
-        Log.i("list-view","Usuario ${datos.mostrarTodoTorneo()}")
+        //Log.i("list-view","Usuario ${datos.mostrarTodoTorneo()}")
 
     }
 
@@ -90,7 +81,8 @@ class IntTorneo : AppCompatActivity() {
             R.id.miIngresar -> {
                 if (tounamentSelected != null) {
                     Log.i("Parametrs","onCreate ${tounamentSelected.nombre} - ${tounamentSelected.descripcion}")
-                    val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    //val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    val Anterior = BTorneo(tounamentSelected.nombre,tounamentSelected.descripcion)
                     abrirActividadEdit(anadirJugador::class.java,Anterior)
                 }else{
                     Log.i("Parametrs","nulos ")
@@ -100,7 +92,8 @@ class IntTorneo : AppCompatActivity() {
             R.id.miJugadores -> {
                 if (tounamentSelected != null) {
                     Log.i("Parametrs","onCreate ${tounamentSelected.nombre} - ${tounamentSelected.descripcion}")
-                    val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    //val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    val Anterior = BTorneo(tounamentSelected.nombre,tounamentSelected.descripcion)
                     abrirActividadEdit(Jugadores::class.java,Anterior)
                 }else{
                     Log.i("Parametrs","nulos ")
@@ -112,7 +105,8 @@ class IntTorneo : AppCompatActivity() {
             R.id.miEditar -> {
                 if (tounamentSelected != null) {
                     Log.i("Parametrs","onCreate ${tounamentSelected.nombre} - ${tounamentSelected.descripcion}")
-                    val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    //val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
+                    val Anterior = BTorneo(tounamentSelected.nombre,tounamentSelected.descripcion)
                     abrirActividadEdit(CrearTorneo::class.java,Anterior)
                 }else{
                     Log.i("Parametrs","nulos ")
@@ -129,12 +123,17 @@ class IntTorneo : AppCompatActivity() {
                 builder.setNegativeButton("Cancelar", null)
                 builder.setPositiveButton("Aceptar", DialogInterface.OnClickListener(){Dialog, which ->
                     try {
-                        val dato = adaptador!!.getItem(posiconElementoSeleccionado)
-                        if (dato != null) {
-                            datos.eliminarTorneoFormulario(dato.id_torneo!!)
-                            adaptador?.remove(datos.consultarTorneoPorId(dato.id_torneo!!))
-                            abrirActividad(MainActivity::class.java)
+                        val db = Firebase.firestore
+                        if (tounamentSelected != null) {
+                            db.collection("torneoAjedrez")
+                                .document(tounamentSelected.nombre.toString())
+                                .delete()
+                                .addOnSuccessListener {
+
+                                }
+                                .addOnFailureListener { }
                         }
+                        abrirActividad(MainActivity::class.java)
                     }finally{
                         Log.i("Erorr","no se puede eliminar")
                     }
@@ -144,8 +143,31 @@ class IntTorneo : AppCompatActivity() {
 
                 return true
             }
-
             else -> super.onContextItemSelected(item)
         }
+    }
+    fun consulta(){
+        Log.i("consulta","se realiza consulta")
+        val db = Firebase.firestore
+        var torneosRef = db
+            .collection("torneoAjedrez")
+        torneosRef.get()
+            .addOnSuccessListener {
+                for( torenos in it){
+                    Log.i("torneo","${torenos.data}")
+                    torneos.add(BTorneo(torenos.get("torneo").toString(),torenos.get("descripcion").toString()))
+                    Log.i("torneo","${torneos}")
+                }
+                adaptador = ArrayAdapter(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    torneos
+                )
+
+                val vista=findViewById<ListView>(R.id.listTorneo)
+                vista.adapter = adaptador
+                registerForContextMenu(vista)
+            }
+            .addOnFailureListener {  }
     }
 }

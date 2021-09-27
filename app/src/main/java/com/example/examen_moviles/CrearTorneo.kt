@@ -5,14 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import com.example.moviles_computacion_2021_b.BTorneo
-import com.example.moviles_computacion_2021_b.EBaseDeDatos
-import com.example.moviles_computacion_2021_b.ESqliteHelperUsuario
-import org.w3c.dom.Text
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class CrearTorneo : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crear_torneo)
@@ -21,7 +21,7 @@ class CrearTorneo : AppCompatActivity() {
         var btn_crear = findViewById<Button>(R.id.crear_torneo)
         val torneo = findViewById<TextView>(R.id.edit_torneo)
         val descripcion = findViewById<TextView>(R.id.edit_torneo2)
-        val basedatos=ESqliteHelperUsuario(this)
+        //val basedatos=ESqliteHelperUsuario(this)
         torneo.editableText
         descripcion.editableText
         if(torneoAnterior!=null){
@@ -38,16 +38,9 @@ class CrearTorneo : AppCompatActivity() {
             }else{
                 Log.i("bdd", "Esta lleno")
                 if(torneoAnterior!=null){
-                    val actualizado = basedatos.actualizarTorneoFormulario(torneo.text.toString(),descripcion.text.toString(),torneoAnterior.id_torneo!!)
-                    Log.i("bdd", "Esta lleno ${actualizado} ${torneoAnterior.nombre}")
+                    actualizarTorneo(torneoAnterior.nombre.toString())
                 }else{
-                    if (basedatos != null) {
-                        basedatos.crearTorneoFormulario(
-                                torneo.text.toString(),
-                                descripcion.text.toString()
-                        )
-                        Log.i("bdd", "Torneo creado")
-                    }
+                    crearTorneo()
                 }
                 abrirActividad(MainActivity::class.java)
             }
@@ -62,4 +55,38 @@ class CrearTorneo : AppCompatActivity() {
         )
         this.startActivity(intentExplicito);
     }
+    fun crearTorneo() {
+        val torneo = findViewById<TextView>(R.id.edit_torneo)
+        val descripcion = findViewById<TextView>(R.id.edit_torneo2)
+        val nuevoTorneo = hashMapOf<String, Any>(
+            "torneo" to torneo.text.toString(),
+            "descripcion" to descripcion.text.toString()
+        )
+        val db = Firebase.firestore
+        val referencia = db.collection("torneoAjedrez")
+            .document(torneo.text.toString())
+            .set(nuevoTorneo)
+            .addOnSuccessListener {  }
+            .addOnFailureListener { }
+
+    }
+    fun actualizarTorneo(torneoAnterior: String) {
+        val torneo = findViewById<TextView>(R.id.edit_torneo)
+        val descripcion = findViewById<TextView>(R.id.edit_torneo2)
+        val actualizarJugador = hashMapOf<String, Any>(
+            "torneo" to torneo.text.toString(),
+            "descripcion" to descripcion.text.toString()
+        )
+        val db = Firebase.firestore
+
+        val referencia = db.collection("torneoAjedrez")
+            .document(torneoAnterior)
+            .delete()
+            .addOnSuccessListener {
+
+            }
+        crearTorneo()
+
+    }
+
 }
