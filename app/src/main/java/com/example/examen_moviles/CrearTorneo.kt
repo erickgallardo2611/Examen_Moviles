@@ -60,7 +60,8 @@ class CrearTorneo : AppCompatActivity() {
         val descripcion = findViewById<TextView>(R.id.edit_torneo2)
         val nuevoTorneo = hashMapOf<String, Any>(
             "torneo" to torneo.text.toString(),
-            "descripcion" to descripcion.text.toString()
+            "descripcion" to descripcion.text.toString(),
+            "jugadores" to arrayListOf<String>()
         )
         val db = Firebase.firestore
         val referencia = db.collection("torneoAjedrez")
@@ -75,7 +76,8 @@ class CrearTorneo : AppCompatActivity() {
         val descripcion = findViewById<TextView>(R.id.edit_torneo2)
         val actualizarJugador = hashMapOf<String, Any>(
             "torneo" to torneo.text.toString(),
-            "descripcion" to descripcion.text.toString()
+            "descripcion" to descripcion.text.toString(),
+            "jugadores" to arrayListOf<String>()
         )
         val db = Firebase.firestore
 
@@ -83,9 +85,9 @@ class CrearTorneo : AppCompatActivity() {
             .document(torneoAnterior)
             .delete()
             .addOnSuccessListener {
-
+                crearTorneo()
             }
-        crearTorneo()
+
 
     }
 

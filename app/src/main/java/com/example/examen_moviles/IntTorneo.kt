@@ -78,6 +78,14 @@ class IntTorneo : AppCompatActivity() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         var tounamentSelected = adaptador!!.getItem(posiconElementoSeleccionado)
         return when (item?.itemId) {
+            R.id.miMapa -> {
+                val intent = Intent(
+                    this,
+                    FMapsActivity::class.java
+                )
+                startActivity(intent)
+                return true
+            }
             R.id.miIngresar -> {
                 if (tounamentSelected != null) {
                     Log.i("Parametrs","onCreate ${tounamentSelected.nombre} - ${tounamentSelected.descripcion}")
