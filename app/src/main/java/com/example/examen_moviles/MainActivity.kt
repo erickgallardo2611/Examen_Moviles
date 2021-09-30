@@ -23,6 +23,8 @@ import com.google.protobuf.Parser
 class MainActivity : AppCompatActivity() {
     val CODIGO_INICIO_SESION = 102
     var email:String=""
+    var nombreJugador:String=""
+    var eloJugador:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         val botonLogout = findViewById<Button>(R.id.btn_logout)
         botonLogout.setOnClickListener {
             solicitarSalirDelAplicativo()
+        }
+        val botonPartida = findViewById<Button>(R.id.btn_Partida)
+        botonPartida.setOnClickListener {
+            abrirActividadJugar(JugarPartida::class.java,nombreJugador,eloJugador)
         }
     }
 
@@ -109,6 +115,8 @@ class MainActivity : AppCompatActivity() {
                             usuarioCargado.elo)
                         setearBienvenida()
                         email = usuarioCargado.email.toString()
+                        nombreJugador = usuarioCargado.nombre.toString()
+                        eloJugador = usuarioCargado.elo.toString()
                         BAuthUsuario.usuario = usuarioCargado
                         Log.i("firebase-firestore", "Usuario cargado")
                     }
@@ -166,6 +174,7 @@ class MainActivity : AppCompatActivity() {
         val botonProducto = findViewById<Button>(R.id.button_torneo)
         val botonRestaurante = findViewById<Button>(R.id.button_participante)
         val nombreJugador = findViewById<TextView>(R.id.txtNombreUsuaio)
+        val botonJugarPartida = findViewById<Button>(R.id.btn_Partida)
         Log.i("usuario xdd","${BAuthUsuario.usuario}")
         if(BAuthUsuario.usuario != null){
             botonLogin.visibility = View.INVISIBLE
@@ -173,6 +182,7 @@ class MainActivity : AppCompatActivity() {
             botonProducto.visibility = View.VISIBLE
             botonRestaurante.visibility = View.VISIBLE
             nombreJugador.visibility = View.VISIBLE
+            botonJugarPartida.visibility = View.VISIBLE
             nombreJugador.setText(BAuthUsuario.usuario!!.nombre)
         }else{
             botonLogin.visibility = View.VISIBLE
@@ -180,6 +190,7 @@ class MainActivity : AppCompatActivity() {
             botonProducto.visibility = View.INVISIBLE
             botonRestaurante.visibility = View.VISIBLE
             nombreJugador.visibility = View.INVISIBLE
+            botonJugarPartida.visibility = View.INVISIBLE
         }
     }
 
@@ -211,6 +222,21 @@ class MainActivity : AppCompatActivity() {
             clase
         )
         intentExplicito.putExtra("email",email)
+        this.startActivity(intentExplicito);
+    }
+
+    fun abrirActividadJugar(
+        clase: Class<*>,
+        nombre: String,
+        elo: String
+    ){
+        val intentExplicito = Intent(
+            this,
+            clase
+        )
+        intentExplicito.putExtra("nombre",nombre)
+        intentExplicito.putExtra("elo",elo)
+        Log.i("datos","${elo},${nombre}")
         this.startActivity(intentExplicito);
     }
     fun abrirTorneo(

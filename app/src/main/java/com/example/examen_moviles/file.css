@@ -1,0 +1,67 @@
+body {
+  background: steelblue;
+  color: #eee;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#tablero {
+  margin-top: 50px;
+  background: linear-gradient(
+    45deg,
+    rgba(0,0,0,.4) 25%,
+    transparent 25%,
+    transparent 75%,
+    rgba(0,0,0,.4) 75%
+  ),
+    linear-gradient(
+    45deg,
+    rgba(0,0,0,.4) 25%,
+    transparent 25%,
+    transparent 75%,
+    rgba(0,0,0,.4) 75%
+  ),
+    url(http://img.freepik.com/free-photo/wooden-texture_1160-686.jpg?size=338&amp;ext=jpg);
+  background-position: 0 0, 50px 50px;
+  background-size: 100px 100px;
+  box-shadow: 0 10px 10px -6px rgba(0, 0, 0, .6);
+  border-radius: 3px;
+  border-collapse: collapse;
+  height: 400px;
+  width: 400px;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+
+}
+
+#tablero:before,
+#tablero:after {
+  font-size: 36px;
+  letter-spacing: 16px;
+  line-height: 50px;
+  position: absolute;
+  word-wrap: break-word;
+  left: 8px;
+  width: 400px;
+
+}
+
+#tablero:before {
+  content: "\265C \265E \265D \265A \265B \265D \265E \265C \265F \265F \265F \265F \265F \265F \265F \265F";
+  top: 0;
+  color: #222;
+  text-shadow: 1px 1px 1px rgba(255,255,255,.6);
+}
+
+#tablero:after {
+  content: "\265F \265F \265F \265F \265F \265F \265F \265F \265C \265E \265D \265A \265B \265D \265E \265C";
+  bottom: 0;
+  color: #fff;
+  tex-shadow: 1px 1px 1px rgba(0,0,0,.6);
+}
+
+#font{}

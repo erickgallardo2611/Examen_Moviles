@@ -10,13 +10,13 @@
         android:id="@+id/Titulo_main"
         android:layout_width="316dp"
         android:layout_height="133dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="4dp"
         android:text="Proyecto Moviles\nTorneo-Ajedrecista\nGarcia\tGallardo"
         android:textAlignment="center"
-        android:textColor="#673AB7"
+        android:textColor="#161617"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,63 +24,69 @@
         android:id="@+id/button_torneo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
+        android:layout_marginTop="36dp"
         android:text="Torneos"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Titulo_main" />
+        app:layout_constraintEnd_toEndOf="@+id/txtNombreUsuaio"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="@+id/txtNombreUsuaio"
+        app:layout_constraintTop_toBottomOf="@+id/txtNombreUsuaio" />
 
     <Button
         android:id="@+id/button_participante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="147dp"
-        android:layout_marginBottom="288dp"
+        android:layout_marginTop="44dp"
         android:text="Jugadores"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button_torneo"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/button_torneo"
         app:layout_constraintTop_toBottomOf="@+id/button_torneo" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="36dp"
         android:text="Log In"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Titulo_main"
+        app:layout_constraintStart_toStartOf="@+id/Titulo_main"
         app:layout_constraintTop_toBottomOf="@+id/Titulo_main" />
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="52dp"
         android:text="Log Out"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_participante"
-        app:layout_constraintVertical_bias="0.041" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_Partida"
+        app:layout_constraintStart_toStartOf="@+id/btn_Partida"
+        app:layout_constraintTop_toBottomOf="@+id/btn_Partida" />
 
     <TextView
         android:id="@+id/txtNombreUsuaio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:layout_marginBottom="53dp"
+        android:layout_marginTop="40dp"
         android:text="TextView"
         android:textColor="#201E1E"
         android:textSize="24sp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/button_torneo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_login"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+    <Button
+        android:id="@+id/btn_Partida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="Partida rapida"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/button_participante"
+        app:layout_constraintStart_toStartOf="@+id/button_participante"
+        app:layout_constraintTop_toBottomOf="@+id/button_participante" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
