@@ -3,22 +3,22 @@ package com.example.moviles_computacion_2021_b
 import android.os.Parcel
 import android.os.Parcelable
 
-data class BJugador (
+data class BJugador(
+    var uid: String?,
+    var email: String?,
     var nombre: String?,
-    var elo: Int,
-    var nacionalidad:String?,
-    val jugador: BJugador? = null )
+    var elo: Int)
     :Parcelable{
     constructor(parcel: Parcel) : this(
         parcel.readString(),
-        parcel.readInt(),
         parcel.readString(),
-        parcel.readParcelable(BJugador::class.java.classLoader)
-    ) {
+        parcel.readString(),
+        parcel.readInt())
+    {
     }
 
     override fun toString(): String {
-        return "${nombre} - ${elo} - ${nacionalidad}"
+        return "${nombre} - ${elo}"
     }
 
     override fun describeContents(): Int {
@@ -26,10 +26,10 @@ data class BJugador (
     }
 
     override fun writeToParcel(parcel: Parcel?, flags: Int) {
+        parcel?.writeString(uid)
+        parcel?.writeString(email)
         parcel?.writeString(nombre)
         parcel?.writeInt(elo)
-        parcel?.writeString(nacionalidad)
-        parcel?.writeParcelable(jugador, flags)
     }
 
     companion object CREATOR : Parcelable.Creator<BJugador> {

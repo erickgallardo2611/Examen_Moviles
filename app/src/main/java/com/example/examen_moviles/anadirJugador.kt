@@ -4,16 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import com.example.moviles_computacion_2021_b.BJugador
 import com.example.moviles_computacion_2021_b.BTorneo
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.lang.reflect.Field
 
 class anadirJugador : AppCompatActivity() {
     //val datos = ESqliteHelperUsuario(this)
@@ -39,7 +36,7 @@ class anadirJugador : AppCompatActivity() {
         val lisviewVista = findViewById<ListView>(R.id.encontradoJugador)
         lisviewVista.adapter = adaptador
 
-        var jugadorSelected = BJugador("",1,"")
+        var jugadorSelected = BJugador("","","",1)
         lisviewVista.onItemClickListener = object : AdapterView.OnItemClickListener {
 
             override fun onItemClick(parent: AdapterView<*>, view: View,
@@ -91,7 +88,7 @@ class anadirJugador : AppCompatActivity() {
             .addOnSuccessListener {
                 for( jugadores in it){
                     Log.i("jugador","${jugadores.data}")
-                    listaJugador.add(BJugador(jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString()),jugadores.get("nacionalidad").toString()))
+                    listaJugador.add(BJugador("","",jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString())))
                 }
                 adaptador = ArrayAdapter(
                     this,

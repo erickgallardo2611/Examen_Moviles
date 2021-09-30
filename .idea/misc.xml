@@ -7,8 +7,9 @@
         <entry key="app/src/main/res/layout/activity_crear_jugador.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_crear_torneo.xml" value="0.11548913043478261" />
         <entry key="app/src/main/res/layout/activity_fmaps.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_int_torneo.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_int_torneo.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_jugadores.xml" value="0.1649122807017544" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.1649122807017544" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.1649122807017544" />
         <entry key="app/src/main/res/menu/menu2.xml" value="0.1649122807017544" />

@@ -12,16 +12,14 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.example.moviles_computacion_2021_b.BJugador
 import com.example.moviles_computacion_2021_b.BTorneo
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class Jugadores : AppCompatActivity() {
     var query: Query? = null
     var posiconElementoSeleccionado = 0
-    var nuevoJugador = BJugador("",0,"")
+    var nuevoJugador = BJugador("","","",0)
     val CODIGO_RESPUESTA_INTENT_EXPLICITO = 400
     var listaJugador: ArrayList<BJugador> = ArrayList()
     //val datos = ESqliteHelperUsuario(this)
@@ -117,7 +115,7 @@ class Jugadores : AppCompatActivity() {
                 if (jugadorSelected != null) {
                     Log.i("Parametrs","onCreate ${jugadorSelected.nombre} - ${jugadorSelected.elo}")
                     //val Anterior = datos.consultarJugadorPorId(jugadorSelected.id_jugador!!)
-                    val Anterior : BJugador = BJugador(jugadorSelected.nombre,jugadorSelected.elo,jugadorSelected.nacionalidad)
+                    val Anterior : BJugador = BJugador("","",jugadorSelected.nombre,jugadorSelected.elo)
                     abrirActividadEdit(CrearJugador::class.java,Anterior)
                 }else{
                     Log.i("Parametrs","nulos ")
@@ -166,7 +164,7 @@ class Jugadores : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 //Log.i("un jugador ", "${it}")
-                nuevoJugador = BJugador(it.get("nombre").toString(),Integer.parseInt(it.get("elo").toString()),it.get("nacionalidad").toString())
+                nuevoJugador = BJugador("","",it.get("nombre").toString(),Integer.parseInt(it.get("elo").toString()))
                 Log.i("un jugador ", "${nuevoJugador}")
                 listaJugador.add(nuevoJugador)
                 adaptador = ArrayAdapter(
@@ -178,7 +176,6 @@ class Jugadores : AppCompatActivity() {
                 val vista=findViewById<ListView>(R.id.listTorneo)
                 vista.adapter = adaptador
             }
-
     }
     fun consulta():ArrayList<BJugador>{
         Log.i("consulta","se realiza consulta")
@@ -190,7 +187,7 @@ class Jugadores : AppCompatActivity() {
             .addOnSuccessListener {
                 for( jugadores in it){
                     Log.i("jugador","${jugadores.data}")
-                    listaJugador.add(BJugador(jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString()),jugadores.get("nacionalidad").toString()))
+                    listaJugador.add(BJugador("","",jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString())))
                 }
                 adaptador = ArrayAdapter(
                     this,

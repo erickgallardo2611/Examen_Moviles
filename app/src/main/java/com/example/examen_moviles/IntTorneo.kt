@@ -178,4 +178,5 @@ class IntTorneo : AppCompatActivity() {
             }
             .addOnFailureListener {  }
     }
+
 }
