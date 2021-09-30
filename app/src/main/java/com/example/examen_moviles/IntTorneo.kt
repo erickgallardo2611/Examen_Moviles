@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moviles_computacion_2021_b.BTorneo
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -18,6 +19,7 @@ import com.google.firebase.ktx.Firebase
 class IntTorneo : AppCompatActivity() {
     var posiconElementoSeleccionado = 0
     val CODIGO_RESPUESTA_INTENT_EXPLICITO = 400
+    var email=""
     //val datos=ESqliteHelperUsuario(this)
     var torneos: ArrayList<BTorneo> = ArrayList()
     var adaptador: ArrayAdapter<BTorneo>? = null
@@ -29,6 +31,7 @@ class IntTorneo : AppCompatActivity() {
         btn_crear.setOnClickListener{
             abrirActividad(CrearTorneo::class.java)
         }
+        email = intent.getStringExtra("email").toString()
 
     }
 
@@ -54,6 +57,18 @@ class IntTorneo : AppCompatActivity() {
         Log.i("Parametrs","onCreate ${torneo.nombre} - ${torneo.descripcion}")
         this.startActivity(intentExplicito);
     }
+    fun abrirActividadIngresar(
+        clase: Class<*>,
+        email: String
+    ){
+        val intentExplicito = Intent(
+            this,
+            clase
+        )
+        intentExplicito.putExtra("email",email)
+        this.startActivity(intentExplicito);
+    }
+
 
     override fun onCreateContextMenu(
         menu: ContextMenu?,
@@ -91,7 +106,10 @@ class IntTorneo : AppCompatActivity() {
                     Log.i("Parametrs","onCreate ${tounamentSelected.nombre} - ${tounamentSelected.descripcion}")
                     //val Anterior = datos.consultarTorneoPorId(tounamentSelected.id_torneo!!)
                     val Anterior = BTorneo(tounamentSelected.nombre,tounamentSelected.descripcion)
-                    abrirActividadEdit(anadirJugador::class.java,Anterior)
+                    insertarJugador(tounamentSelected.nombre.toString(),email)
+                    Toast.makeText(applicationContext,
+                        "Ingresado con exito", Toast.LENGTH_LONG)
+                        .show()
                 }else{
                     Log.i("Parametrs","nulos ")
                 }
@@ -177,6 +195,14 @@ class IntTorneo : AppCompatActivity() {
                 registerForContextMenu(vista)
             }
             .addOnFailureListener {  }
+    }
+    fun insertarJugador(nombreTorneo:String,correoJugador:String){
+        val db = Firebase.firestore
+        db.collection("torneoAjedrez")
+            .document(nombreTorneo)
+            .update("jugadores", FieldValue.arrayUnion(correoJugador))
+            .addOnSuccessListener { Log.i("DocumentSnapshot successfully updated!","yes") }
+            .addOnFailureListener { e -> Log.i("Error updating document", "F") }
     }
 
 }

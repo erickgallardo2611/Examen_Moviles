@@ -51,14 +51,14 @@ class anadirJugador : AppCompatActivity() {
                     "Position :$position\nItem Value : $itemValue", Toast.LENGTH_LONG)
                     .show()
                 jugadorSelected=itemValue
-                txtIdplayer.setText(jugadorSelected.nombre.toString())
+                txtIdplayer.setText(jugadorSelected.email.toString())
             }
         }
 
         btnBuscar.setOnClickListener{
             //val jugador=datos.consultarJugadorPorId(txtIdplayer.text.toString().toInt())
             if (torneo_selct != null) {
-                jugadorSelected.nombre?.let { it1 ->
+                jugadorSelected.email?.let { it1 ->
                     insertarJugador(torneo_selct.nombre.toString(),
                         it1
                     )
@@ -88,7 +88,7 @@ class anadirJugador : AppCompatActivity() {
             .addOnSuccessListener {
                 for( jugadores in it){
                     Log.i("jugador","${jugadores.data}")
-                    listaJugador.add(BJugador("","",jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString())))
+                    listaJugador.add(BJugador("",jugadores.get("email").toString(),jugadores.get("nombre").toString(),Integer.parseInt(jugadores.get("elo").toString())))
                 }
                 adaptador = ArrayAdapter(
                     this,
@@ -105,11 +105,11 @@ class anadirJugador : AppCompatActivity() {
     }
 
 
-    fun insertarJugador(nombreTorneo:String,nombreJugador:String){
+    fun insertarJugador(nombreTorneo:String,correoJugador:String){
         val db = Firebase.firestore
         db.collection("torneoAjedrez")
             .document(nombreTorneo)
-            .update("jugadores",FieldValue.arrayUnion(nombreJugador))
+            .update("jugadores",FieldValue.arrayUnion(correoJugador))
             .addOnSuccessListener { Log.i("DocumentSnapshot successfully updated!","yes") }
             .addOnFailureListener { e -> Log.i("Error updating document", "F") }
     }
